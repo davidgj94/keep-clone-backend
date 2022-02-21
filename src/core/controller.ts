@@ -21,7 +21,7 @@ export interface ServerResult<T> {
 }
 
 export type Controller<Parameters, ReturnValueType> = (
-  params: Parameters & { user?: { email: string } }
+  params: Parameters & { user?: { _id: string } }
 ) => Promise<ServerResult<ReturnValueType>>;
 
 export const controllerWrapper =
