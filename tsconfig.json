@@ -15,7 +15,7 @@
     "paths": {
       "types/*": ["src/types/*"],
       "database/*": ["src/database/*"],
-      "controller/*": ["src/controller/*"],
+      "middleware/*": ["src/middleware/*"],
       "service/*": ["src/service/*"],
       "core/*": ["src/core/*"],
       "config": ["src/config/index.ts"],
