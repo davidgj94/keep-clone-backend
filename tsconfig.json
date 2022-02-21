@@ -1,25 +1,25 @@
 {
-    "compilerOptions": {
-      "lib": ["es2020"],
-      "module": "commonjs",
-      "target": "es2020",
-      "outDir": "dist",
-      "skipLibCheck": true,
-      "esModuleInterop": true,
-      "experimentalDecorators": true,
-      "forceConsistentCasingInFileNames": true,
-      "noImplicitAny": false,
-      "emitDecoratorMetadata": true,
-      "baseUrl": ".",
-      "moduleResolution": "node",
-      "paths": {
-        "database/*": ["src/database/*"],
-        "controller/*": ["src/controller/*"],
-        "service/*": ["src/service/*"],
-        "core/*": ["src/core/*"],
-        "config": ["src/config/index.ts"],
-        "auth/*": ["src/auth/*"]
-      }
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "module": "commonjs",
+    "target": "es2020",
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "paths": {
+      "types/*": ["src/types/*"],
+      "database/*": ["src/database/*"],
+      "controller/*": ["src/controller/*"],
+      "service/*": ["src/service/*"],
+      "core/*": ["src/core/*"],
+      "config": ["src/config/index.ts"],
+      "auth/*": ["src/auth/*"]
     }
   }
-  
+}
