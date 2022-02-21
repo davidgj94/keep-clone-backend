@@ -1,0 +1,196 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Google Keep Clone API
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+tags:
+- name: "note"
+  description: "Notes"
+- name: "label"
+  description: "Label"
+paths:
+  /notes/{noteId}:
+    put:
+      tags:
+      - "note"
+      summary: ""
+      description: ""
+      parameters:
+      - in: "path"
+        name: "noteId"
+        required: true
+        type: string
+      - in: "body"
+        name: "data"
+        required: true
+        schema:
+          $ref: "#/definitions/Note"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Note"
+        404:
+          description: Not found
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /notes:
+    get:
+      tags:
+      - "note"
+      parameters:
+      - in: "query"
+        name: "cursor"
+        required: false
+        type: "string"
+      - in: "query"
+        name: "limit"
+        type: "number"
+        required: false
+      - in: "query"
+        name: "labelId"
+        type: "string"
+        required: false
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/GetNotesResponse"
+        404:
+          description: Not found
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+    post:
+      tags:
+      - "note"
+      parameters:
+      - in: "body"
+        name: "data"
+        required: true
+        schema:
+          $ref: "#/definitions/Note"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Note"
+        404:
+          description: Not found
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /labels:
+    get:
+      tags:
+      - "label"
+      responses:
+        200: 
+          description: OK
+          schema:
+            $ref: "#/definitions/GetLabelsResponse"
+        404:
+          description: Not found
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+    post:
+      tags:
+      - "label"
+      parameters:
+      - in: "body"
+        name: "data"
+        required: true
+        schema:
+          $ref: "#/definitions/Label"
+      responses:
+        200: 
+            description: OK
+            schema:
+              $ref: "#/definitions/Label"
+        404:
+          description: Not found
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /labels/{labelId}:
+    put:
+      tags:
+      - "label"
+      parameters:
+      - in: "path"
+        name: "labelId"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "data"
+        required: true
+        schema:
+          $ref: "#/definitions/Label"
+      responses:
+        200: 
+          description: OK
+          schema:
+              $ref: "#/definitions/Label"
+        404:
+          description: Not found
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+          
+definitions:
+  Note:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+      title:
+        type: "string"
+      content:
+        type: "string"
+      labels:
+        type: "array"
+        items:
+          type: "string"
+      user:
+        type: "string"
+      archived:
+        type: "boolean"
+        default: false
+      binned:
+        type: "boolean"
+        default: false
+  Label:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+      name:
+        type: "string"
+  GetLabelsResponse:
+    type: "object"
+    properties:
+      data:
+        type: "array"
+        items:
+          $ref: "#/definitions/Label"
+  GetNotesResponse:
+    type: "object"
+    properties:
+      data:
+        type: "array"
+        items:
+          $ref: "#/definitions/Note"
+      cursor:
+        type: "string"
+      hasMore:
+        type: "boolean"
