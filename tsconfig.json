@@ -16,6 +16,7 @@
       "types/*": ["src/types/*"],
       "database/*": ["src/database/*"],
       "middleware/*": ["src/middleware/*"],
+      "controller/*": ["src/controller/*"],
       "service/*": ["src/service/*"],
       "core/*": ["src/core/*"],
       "config": ["src/config/index.ts"],

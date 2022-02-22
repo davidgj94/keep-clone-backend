@@ -1,4 +1,4 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   version: 1.0.0
   title: Google Keep Clone API
@@ -6,27 +6,28 @@ info:
     name: MIT
     url: http://opensource.org/licenses/MIT
 tags:
-- name: "note"
-  description: "Notes"
-- name: "label"
-  description: "Label"
+  - name: "note"
+    description: "Notes"
+  - name: "label"
+    description: "Label"
 paths:
   /notes/{noteId}:
     put:
       tags:
-      - "note"
+        - "note"
       summary: ""
       description: ""
+      operationId: "modifyNote"
       parameters:
-      - in: "path"
-        name: "noteId"
-        required: true
-        type: string
-      - in: "body"
-        name: "data"
-        required: true
-        schema:
-          $ref: "#/definitions/Note"
+        - in: "path"
+          name: "noteId"
+          required: true
+          type: string
+        - in: "body"
+          name: "data"
+          required: true
+          schema:
+            $ref: "#/definitions/Note"
       responses:
         200:
           description: OK
@@ -41,20 +42,21 @@ paths:
   /notes:
     get:
       tags:
-      - "note"
+        - "note"
+      operationId: "getNotes"
       parameters:
-      - in: "query"
-        name: "cursor"
-        required: false
-        type: "string"
-      - in: "query"
-        name: "limit"
-        type: "number"
-        required: false
-      - in: "query"
-        name: "labelId"
-        type: "string"
-        required: false
+        - in: "query"
+          name: "cursor"
+          required: false
+          type: "string"
+        - in: "query"
+          name: "limit"
+          type: "number"
+          required: false
+        - in: "query"
+          name: "labelId"
+          type: "string"
+          required: false
       responses:
         200:
           description: OK
@@ -68,13 +70,14 @@ paths:
           description: Unauthorized
     post:
       tags:
-      - "note"
+        - "note"
+      operationId: "createNote"
       parameters:
-      - in: "body"
-        name: "data"
-        required: true
-        schema:
-          $ref: "#/definitions/Note"
+        - in: "body"
+          name: "data"
+          required: true
+          schema:
+            $ref: "#/definitions/Note"
       responses:
         200:
           description: OK
@@ -89,9 +92,10 @@ paths:
   /labels:
     get:
       tags:
-      - "label"
+        - "label"
+      operationId: "getLabels"
       responses:
-        200: 
+        200:
           description: OK
           schema:
             $ref: "#/definitions/GetLabelsResponse"
@@ -103,18 +107,19 @@ paths:
           description: Unauthorized
     post:
       tags:
-      - "label"
+        - "label"
+      operationId: "createLabel"
       parameters:
-      - in: "body"
-        name: "data"
-        required: true
-        schema:
-          $ref: "#/definitions/Label"
+        - in: "body"
+          name: "data"
+          required: true
+          schema:
+            $ref: "#/definitions/Label"
       responses:
-        200: 
-            description: OK
-            schema:
-              $ref: "#/definitions/Label"
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Label"
         404:
           description: Not found
         400:
@@ -124,29 +129,30 @@ paths:
   /labels/{labelId}:
     put:
       tags:
-      - "label"
+        - "label"
+      operationId: "modifyLabel"
       parameters:
-      - in: "path"
-        name: "labelId"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "data"
-        required: true
-        schema:
-          $ref: "#/definitions/Label"
+        - in: "path"
+          name: "labelId"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "data"
+          required: true
+          schema:
+            $ref: "#/definitions/Label"
       responses:
-        200: 
+        200:
           description: OK
           schema:
-              $ref: "#/definitions/Label"
+            $ref: "#/definitions/Label"
         404:
           description: Not found
         400:
           description: Bad request
         401:
           description: Unauthorized
-          
+
 definitions:
   Note:
     type: "object"

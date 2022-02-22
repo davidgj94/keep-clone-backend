@@ -1,7 +1,13 @@
 import express, { RequestHandler } from "express";
-import { paths } from "types/swagger/schema";
-import { ExtractParameters, ExtractResponse } from "types/swagger/utils";
-import { controllerWrapper, Controller } from "core/controller";
+
+import { paths } from "types/swagger";
+import { Extract } from "core/types";
+import { controllerWrapper, Controller } from "controller/utils";
+
+export type ExtractOperation<
+  T extends keyof paths,
+  U extends keyof paths[T]
+> = Extract<Extract<paths, T>, U>;
 
 // TODO: transform from {variable} to :variable
 const transformRouteParams = (routeUrl: string) => routeUrl;
@@ -13,10 +19,7 @@ export function routerBuilder<
   router: express.Router,
   endpointPath: Endpoint,
   method: Method,
-  controller: Controller<
-    ExtractParameters<Endpoint, Method>,
-    ExtractResponse<Endpoint, Method, 200>
-  >
+  controller: Controller<ExtractOperation<Endpoint, Method>>
 ): void;
 export function routerBuilder<
   Endpoint extends keyof paths,
@@ -26,10 +29,7 @@ export function routerBuilder<
   endpointPath: Endpoint,
   method: Method,
   middlewares: RequestHandler[],
-  controller: Controller<
-    ExtractParameters<Endpoint, Method>,
-    ExtractResponse<Endpoint, Method, 200>
-  >
+  controller: Controller<ExtractOperation<Endpoint, Method>>
 ): void;
 
 export function routerBuilder<

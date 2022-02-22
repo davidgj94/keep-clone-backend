@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import { pick } from "lodash";
+import { Extract, ValueOf } from "core/types";
 
 export class ServerError extends Error {
   public errorCode: StatusCodes;
@@ -15,19 +16,26 @@ export class ServerError extends Error {
     (err as ServerError).errorCode !== undefined;
 }
 
-export interface ServerResult<T> {
-  statusCode: StatusCodes;
-  value: T;
+export interface ServerResult<T, U> {
+  statusCode: T;
+  value: U;
 }
 
-export type Controller<Parameters, ReturnValueType> = (
-  params: Parameters & { user?: { _id: string } }
-) => Promise<ServerResult<ReturnValueType>>;
+type OperationParameters<Operation> = Extract<Operation, "parameters">;
+
+type OperationResponses<Operation> = ValueOf<{
+  [statusCode in keyof Extract<Operation, "responses">]: ServerResult<
+    statusCode,
+    Extract<Extract<Operation, "responses">[statusCode], "schema">
+  >;
+}>;
+
+export type Controller<Operation> = (
+  params: OperationParameters<Operation> & { user?: { _id: string } }
+) => Promise<OperationResponses<Operation>>;
 
 export const controllerWrapper =
-  <Parameters, ReturnValueType>(
-    controller: Controller<Parameters, ReturnValueType>
-  ): RequestHandler =>
+  <Operation>(controller: Controller<Operation>): RequestHandler =>
   async (req, res, next) => {
     try {
       const valErrors = validationResult(req);
@@ -36,8 +44,8 @@ export const controllerWrapper =
       const result = await controller({
         ...pick(req, ["query", "body", "user"]),
         path: req.params,
-      } as unknown as Parameters);
-      res.status(result.statusCode).json(result.value);
+      } as unknown as OperationParameters<Operation>);
+      return res.status(result.statusCode as StatusCodes).json(result.value);
     } catch (error) {
       return next(error);
     }
