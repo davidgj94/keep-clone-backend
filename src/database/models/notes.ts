@@ -1,9 +1,8 @@
 import { model, Schema, Model, Document, Types, SchemaTypes } from "mongoose";
 import { validateRef } from "./utils";
 import { definitions } from "types/swagger";
-import { UnwrapArrayType } from "core/types";
 
-type INote = Omit<definitions["Note"], "labels" | "user"> & {
+export type INote = Omit<definitions["Note"], "_id" | "labels" | "user"> & {
   labels: Types.ObjectId[];
   user: Types.ObjectId;
 };
@@ -11,8 +10,10 @@ type INote = Omit<definitions["Note"], "labels" | "user"> & {
 interface NoteModel extends Model<INote, {}, NoteInstanceMethods> {
   findNotes(
     query: {
-      label?: UnwrapArrayType<definitions["Note"]["labels"]>;
-      user?: definitions["Note"]["user"];
+      // label?: UnwrapArrayType<definitions["Note"]["labels"]>;
+      // user?: definitions["Note"]["user"];
+      label?: Types.ObjectId;
+      user: Types.ObjectId;
     },
     cursor: Types.ObjectId,
     limit: number
@@ -44,14 +45,19 @@ const NotesSchema = new Schema<INote, NoteModel>({
 
 NotesSchema.statics.findNotes = async function (
   this,
-  query: {
-    label?: UnwrapArrayType<definitions["Note"]["labels"]>;
-    user?: definitions["Note"]["user"];
+  queryParams: {
+    label?: Types.ObjectId;
+    user?: Types.ObjectId;
   },
   cursor: Types.ObjectId,
   limit: number
-): Promise<INote[]> {};
+): Promise<INote[]> {
+  const { label, user } = queryParams;
+  const query = label ? { label } : user ? { user } : undefined;
+  if (!query) return [];
+  return await this.find({ ...query, _id: { $gt: cursor } }).limit(limit);
+};
 
-const Product = model<INote, NoteModel>("Product", NotesSchema);
+const Note = model<INote, NoteModel>("Product", NotesSchema);
 
-export default Product;
+export default Note;

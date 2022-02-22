@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
+    "strictNullChecks": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "moduleResolution": "node",
