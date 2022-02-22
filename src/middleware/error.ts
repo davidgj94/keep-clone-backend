@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { ErrorRequestHandler, RequestHandler } from "express";
 
-import { ServerError } from "core/controller";
+import { ServerError } from "controller/utils";
 
 export const errorHandler: ErrorRequestHandler = (err: Error, req, res, _) => {
   res
