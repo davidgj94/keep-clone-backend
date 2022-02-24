@@ -20,6 +20,8 @@ interface LabelModel extends Model<ILabel, {}, LabelInstanceMethods> {
   findUserLabels(userId: string): Promise<LabelDocument[]>;
 }
 
+interface LabelInstanceMethods {}
+
 const LabelSchema = new Schema<ILabel, LabelModel>({
   name: { type: String, required: true },
   user: {
