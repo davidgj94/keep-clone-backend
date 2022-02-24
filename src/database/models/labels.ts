@@ -1,4 +1,12 @@
-import { model, Schema, Model, Document, Types, SchemaTypes } from "mongoose";
+import {
+  model,
+  Schema,
+  Model,
+  Document,
+  Types,
+  SchemaTypes,
+  HydratedDocument,
+} from "mongoose";
 import { validateRef } from "./utils";
 import { definitions } from "types/swagger";
 
@@ -6,11 +14,11 @@ export type ILabel = Omit<definitions["Label"], "_id"> & {
   user: Types.ObjectId;
 };
 
-interface LabelModel extends Model<ILabel, {}, LabelInstanceMethods> {
-  findUserLabels(user: Types.ObjectId): Promise<ILabel[]>;
-}
+type LabelDocument = HydratedDocument<ILabel, LabelInstanceMethods>;
 
-interface LabelInstanceMethods {}
+interface LabelModel extends Model<ILabel, {}, LabelInstanceMethods> {
+  findUserLabels(userId: string): Promise<LabelDocument[]>;
+}
 
 const LabelSchema = new Schema<ILabel, LabelModel>({
   name: { type: String, required: true },
@@ -24,11 +32,11 @@ const LabelSchema = new Schema<ILabel, LabelModel>({
 
 LabelSchema.statics.findUserLabels = async function (
   this,
-  user: Types.ObjectId
-): Promise<ILabel[]> {
-  return await this.find({ user });
+  userId: string
+): Promise<LabelDocument[]> {
+  return await this.find({ user: userId });
 };
 
-const Label = model<ILabel, LabelModel>("Product", LabelSchema);
+const Label = model<ILabel, LabelModel>("Label", LabelSchema);
 
 export default Label;
