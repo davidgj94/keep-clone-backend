@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { operations } from "types/swagger";
 import { Controller, ServerError } from "./utils";
 import { NotesService } from "service/notes";
+import { omit } from "lodash";
 
 const getNotesController: Controller<operations["getNotes"]> = async ({
   query: { cursor, labelId, limit },
@@ -17,16 +18,41 @@ const getNotesController: Controller<operations["getNotes"]> = async ({
   });
   if (result.isErr()) {
     switch (result.error.errType) {
-      case "UNAUTHORIZED_USER":
-        throw new ServerError(StatusCodes.UNAUTHORIZED, "");
+      case "LABEL_NOT_FOUND":
+        throw new ServerError(
+          StatusCodes.NOT_FOUND,
+          result.error.error.message
+        );
       default:
         break;
     }
   }
-  // TODO: fix result types
+  // @ts-expect-error TODO: fix result types
   return { statusCode: StatusCodes.OK, value: result.value };
+};
+
+const createNoteController: Controller<operations["createNote"]> = async ({
+  body: { data: noteFields },
+  user,
+}) => {
+  if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED, "");
+  const result = await NotesService.upsertNote({
+    ...omit(noteFields, ["id"]),
+    user: user._id,
+  });
+  if (result.isErr()) {
+    switch (result.error.errType) {
+      case "EMPTY_NOTE":
+      case "VALIDATION_ERROR":
+        throw new ServerError(StatusCodes.BAD_REQUEST, result.error.error);
+      default:
+        break;
+    }
+  }
+  return { statusCode: StatusCodes.CREATED, value: result.value };
 };
 
 export class NotesController {
   static getNotes = getNotesController;
+  static createNote = createNoteController;
 }
