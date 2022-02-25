@@ -15,10 +15,10 @@ export type INote = Omit<definitions["Note"], "_id" | "labels" | "user"> & {
   user: Types.ObjectId;
 };
 
-type NoteDocument = HydratedDocument<INote>;
+export type NoteDocument = HydratedDocument<INote>;
 
 interface NoteModel extends Model<INote, {}, NoteInstanceMethods> {
-  findNotes(params: FindNotesParams): Promise<NoteDocument[]>;
+  findNotes(params: FindNotesParams): Promise<FindNotesOut>;
 }
 
 interface NoteInstanceMethods {}
@@ -51,6 +51,12 @@ type FindNotesParams = {
   limit?: number;
 };
 
+type FindNotesOut = {
+  data: NoteDocument[];
+  cursor?: string;
+  hasMore: boolean;
+};
+
 type FindNotesQuery =
   | {
       user: string;
@@ -64,10 +70,14 @@ type FindNotesQuery =
 NotesSchema.statics.findNotes = async function (
   this,
   { labelId: label, userId: user, cursor, limit = 10 }: FindNotesParams
-): Promise<NoteDocument[]> {
+): Promise<FindNotesOut> {
   let query: FindNotesQuery = label ? { label } : { user };
   if (cursor) query = { ...query, _id: { $gt: cursor } };
-  return await this.find(query).limit(limit);
+  const count = await this.find(query).count();
+  const notes = await this.find(query).limit(limit + 1);
+  const hasMore = notes.length == limit + 1;
+  const newCursor = hasMore ? notes[limit - 1]._id.toString() : undefined;
+  return { data: notes.slice(0, limit - 1), hasMore, cursor: newCursor };
 };
 
 const Note = model<INote, NoteModel>("Note", NotesSchema);
