@@ -96,7 +96,7 @@ export interface operations {
     };
     responses: {
       /** OK */
-      200: {
+      201: {
         schema: definitions["Note"];
       };
       /** Bad request */
