@@ -9,7 +9,7 @@ const getNotesController: Controller<operations["getNotes"]> = async ({
   query: { cursor, labelId, limit },
   user,
 }) => {
-  if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED, "");
+  if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED);
   const result = await NotesService.getNotes({
     userId: user._id,
     labelId,
@@ -17,14 +17,12 @@ const getNotesController: Controller<operations["getNotes"]> = async ({
     limit,
   });
   if (result.isErr()) {
-    switch (result.error.errType) {
+    const { errType, error } = result.error;
+    switch (errType) {
       case "LABEL_NOT_FOUND":
-        throw new ServerError(
-          StatusCodes.NOT_FOUND,
-          result.error.error.message
-        );
+        throw new ServerError(StatusCodes.NOT_FOUND, error.message);
       default:
-        break;
+        throw error;
     }
   }
   // @ts-expect-error TODO: fix result types
@@ -41,12 +39,13 @@ const createNoteController: Controller<operations["createNote"]> = async ({
     user: user._id,
   });
   if (result.isErr()) {
-    switch (result.error.errType) {
+    const { errType, error } = result.error;
+    switch (errType) {
       case "EMPTY_NOTE":
       case "VALIDATION_ERROR":
-        throw new ServerError(StatusCodes.BAD_REQUEST, result.error.error);
+        throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
       default:
-        break;
+        throw error;
     }
   }
   return { statusCode: StatusCodes.CREATED, value: result.value };
