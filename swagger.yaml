@@ -157,7 +157,7 @@ definitions:
   Note:
     type: "object"
     properties:
-      _id:
+      id:
         type: "string"
       title:
         type: "string"
@@ -178,7 +178,7 @@ definitions:
   Label:
     type: "object"
     properties:
-      _id:
+      id:
         type: "string"
       name:
         type: "string"

@@ -22,7 +22,7 @@ export interface paths {
 
 export interface definitions {
   Note: {
-    _id?: string;
+    id?: string;
     title?: string;
     content?: string;
     labels?: string[];
@@ -31,7 +31,7 @@ export interface definitions {
     binned?: boolean;
   };
   Label: {
-    _id?: string;
+    id?: string;
     name?: string;
   };
   GetLabelsResponse: {
