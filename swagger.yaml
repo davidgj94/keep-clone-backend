@@ -29,7 +29,7 @@ paths:
           schema:
             $ref: "#/definitions/Note"
       responses:
-        200:
+        201:
           description: OK
           schema:
             $ref: "#/definitions/Note"

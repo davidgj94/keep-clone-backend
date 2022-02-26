@@ -30,8 +30,10 @@ type OperationResponses<Operation> = ValueOf<{
   >;
 }>;
 
+type User = { _id: string };
+
 export type Controller<Operation> = (
-  params: OperationParameters<Operation> & { user?: { _id: string } }
+  params: OperationParameters<Operation> & { user?: User }
 ) => Promise<OperationResponses<Operation>>;
 
 export const controllerWrapper =
