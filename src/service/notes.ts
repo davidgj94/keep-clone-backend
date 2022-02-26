@@ -80,8 +80,9 @@ const upsertNoteService = async (
           errType: "NOTE_NOT_FOUND",
           error: new Error(`note "${noteFields.id}" not found`),
         });
+    } else {
+      note = await Note.create(noteFields);
     }
-    note = await Note.create(noteFields);
     return ok(notesMapper(note));
   } catch (error) {
     if (error instanceof Error.ValidationError)
