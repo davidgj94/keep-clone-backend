@@ -5,12 +5,12 @@ import { Mapper, ServiceResult } from "./utils";
 import { err, ok } from "core/result";
 
 export const upsertService =
-  <InputType extends { id?: string }, DbType, DtoType>(
+  <DbType, DtoType>(
     model: Model<DbType>,
     mapper: Mapper<HydratedDocument<DbType>, DtoType>
   ) =>
   async (
-    fields: InputType
+    fields: Partial<DtoType> & { id?: string }
   ): Promise<
     ServiceResult<DtoType, "EMPTY_FIELDS" | "VALIDATION_ERROR" | "NOT_FOUND">
   > => {

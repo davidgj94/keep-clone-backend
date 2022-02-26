@@ -41,7 +41,7 @@ const createNoteController: Controller<operations["createNote"]> = async ({
   if (result.isErr()) {
     const { errType, error } = result.error;
     switch (errType) {
-      case "EMPTY_NOTE":
+      case "EMPTY_FIELDS":
       case "VALIDATION_ERROR":
         throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
       default:
@@ -65,10 +65,10 @@ const modifyNoteController: Controller<operations["modifyNote"]> = async ({
   if (result.isErr()) {
     const { errType, error } = result.error;
     switch (errType) {
-      case "EMPTY_NOTE":
+      case "EMPTY_FIELDS":
       case "VALIDATION_ERROR":
         throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
-      case "NOTE_NOT_FOUND":
+      case "NOT_FOUND":
         throw new ServerError(StatusCodes.NOT_FOUND, error.message);
       default:
         throw error;
