@@ -116,7 +116,7 @@ paths:
           schema:
             $ref: "#/definitions/Label"
       responses:
-        200:
+        201:
           description: OK
           schema:
             $ref: "#/definitions/Label"
@@ -142,7 +142,7 @@ paths:
           schema:
             $ref: "#/definitions/Label"
       responses:
-        200:
+        201:
           description: OK
           schema:
             $ref: "#/definitions/Label"
@@ -181,6 +181,8 @@ definitions:
       id:
         type: "string"
       name:
+        type: "string"
+      user:
         type: "string"
   GetLabelsResponse:
     type: "object"

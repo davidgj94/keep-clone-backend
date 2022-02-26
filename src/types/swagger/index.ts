@@ -33,6 +33,7 @@ export interface definitions {
   Label: {
     id?: string;
     name?: string;
+    user?: string;
   };
   GetLabelsResponse: {
     data?: definitions["Label"][];
@@ -129,7 +130,7 @@ export interface operations {
     };
     responses: {
       /** OK */
-      200: {
+      201: {
         schema: definitions["Label"];
       };
       /** Bad request */
@@ -151,7 +152,7 @@ export interface operations {
     };
     responses: {
       /** OK */
-      200: {
+      201: {
         schema: definitions["Label"];
       };
       /** Bad request */
