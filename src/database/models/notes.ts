@@ -15,7 +15,7 @@ export type INote = Omit<definitions["Note"], "_id" | "labels" | "user"> & {
   user: Types.ObjectId;
 };
 
-export type NoteDocument = HydratedDocument<INote>;
+export type NoteDocument = HydratedDocument<INote, NoteInstanceMethods>;
 
 interface NoteModel extends Model<INote, {}, NoteInstanceMethods> {
   findNotes(params: FindNotesParams): Promise<FindNotesOut>;

@@ -14,7 +14,7 @@ export type ILabel = Omit<definitions["Label"], "_id"> & {
   user: Types.ObjectId;
 };
 
-type LabelDocument = HydratedDocument<ILabel, LabelInstanceMethods>;
+export type LabelDocument = HydratedDocument<ILabel, LabelInstanceMethods>;
 
 interface LabelModel extends Model<ILabel, {}, LabelInstanceMethods> {
   findUserLabels(userId: string): Promise<LabelDocument[]>;

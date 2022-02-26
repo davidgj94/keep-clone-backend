@@ -2,10 +2,11 @@ import { some, omit, isEmpty } from "lodash";
 import { Error } from "mongoose";
 
 import { definitions } from "types/swagger";
-import { ServiceResult } from "./utils";
+import { Mapper, ServiceResult } from "./utils";
 import { err, ok } from "core/result";
 import { Label } from "database/models";
 import Note, { NoteDocument } from "database/models/notes";
+import { upsertService } from "./common";
 
 type GetNotesServiceParams = {
   userId: string;
@@ -20,7 +21,7 @@ type GetNotesServiceOut = {
   hasMore: boolean;
 };
 
-const notesMapper = (note: NoteDocument): definitions["Note"] => {
+const notesMapper: Mapper<NoteDocument, definitions["Note"]> = (note) => {
   const noteJSON = note.toJSON();
   return {
     ...omit(noteJSON, ["_id", "__v"]),
@@ -61,37 +62,8 @@ const getNotesService = async ({
   return ok({ hasMore, cursor: newCursor, notes: data.map(notesMapper) });
 };
 
-const upsertNoteService = async (
-  noteFields: definitions["Note"]
-): Promise<
-  ServiceResult<
-    definitions["Note"],
-    "EMPTY_NOTE" | "VALIDATION_ERROR" | "NOTE_NOT_FOUND"
-  >
-> => {
-  if (isEmpty(noteFields))
-    return err({ errType: "EMPTY_NOTE", error: new Error("empty note") });
-  try {
-    let note: NoteDocument | null;
-    if (noteFields.id) {
-      note = await Note.findByIdAndUpdate(noteFields.id, noteFields);
-      if (!note)
-        return err({
-          errType: "NOTE_NOT_FOUND",
-          error: new Error(`note "${noteFields.id}" not found`),
-        });
-    } else {
-      note = await Note.create(noteFields);
-    }
-    return ok(notesMapper(note));
-  } catch (error) {
-    if (error instanceof Error.ValidationError)
-      return err({ errType: "VALIDATION_ERROR", error });
-    throw error;
-  }
-};
-
 export class NotesService {
   static getNotes = getNotesService;
-  static upsertNote = upsertNoteService;
+  // @ts-expect-error mongoose types
+  static upsertNote = upsertService(Note, notesMapper);
 }
