@@ -9,7 +9,6 @@ const labelsMapper: Mapper<LabelDocument, definitions["Label"]> = (labelDB) => {
   const labelJSON = labelDB.toJSON();
   return {
     ...omit(labelJSON, ["_id", "__v"]),
-    id: labelJSON._id.toString(),
     user: labelJSON.user.toString(),
   };
 };
