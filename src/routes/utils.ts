@@ -48,13 +48,11 @@ export function routerBuilder<
   if (args.length === 1)
     return router[method as string](
       transformRouteParams(endpointPath),
-      method as string,
       controllerWrapper(args[0])
     );
   if (args.length === 2)
     return router[method as string](
       transformRouteParams(endpointPath),
-      method as string,
       ...args[0],
       controllerWrapper(args[1])
     );

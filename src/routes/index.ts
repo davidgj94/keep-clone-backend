@@ -1,11 +1,11 @@
 import express from "express";
-import { query } from "express-validator";
 
-import { routerBuilder } from "./utils";
-import { createLabelController } from "controller/labels";
+import notesRouter from "./notes";
+import labelsRouter from "./labels";
 
 const router = express.Router();
 
-routerBuilder(router, "/labels", "post", createLabelController);
+router.use(notesRouter);
+router.use(labelsRouter);
 
 export default router;

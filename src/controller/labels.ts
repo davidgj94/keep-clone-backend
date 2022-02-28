@@ -36,7 +36,7 @@ export const createLabelController: Controller<
   return { statusCode: StatusCodes.CREATED, value: result.value };
 };
 
-export const modifyNoteController: Controller<
+export const modifyLabelController: Controller<
   operations["modifyLabel"]
 > = async ({ body: labelFields, path: { labelId }, user }) => {
   if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED);
@@ -60,3 +60,9 @@ export const modifyNoteController: Controller<
 
   return { statusCode: StatusCodes.CREATED, value: result.value };
 };
+
+export class LabelController {
+  static findLabels = findLabelsController;
+  static createLabel = createLabelController;
+  static modifyLabel = modifyLabelController;
+}
