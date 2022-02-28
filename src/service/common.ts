@@ -10,7 +10,7 @@ export const upsertService =
     mapper: Mapper<HydratedDocument<DbType>, DtoType>
   ) =>
   async (
-    fields: Partial<DtoType> & { id?: string }
+    fields: Partial<DtoType> & { id?: string } & { user: string }
   ): Promise<
     ServiceResult<DtoType, "EMPTY_FIELDS" | "VALIDATION_ERROR" | "NOT_FOUND">
   > => {
