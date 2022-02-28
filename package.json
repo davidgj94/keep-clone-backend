@@ -14,6 +14,7 @@
     "@types/lodash": "^4.14.178",
     "@types/mongoose": "^5.11.97",
     "@types/passport-jwt": "^3.0.6",
+    "@types/faker": "^5.5.9",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
@@ -28,9 +29,14 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "faker": "^5.5.3"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "jest-environment-node": "^27.4.6",
+    "mongodb-memory-server": "6.2.4",
     "nodemon": "^2.0.15",
     "openapi-typescript": "^5.2.0",
     "ts-node": "^10.4.0",

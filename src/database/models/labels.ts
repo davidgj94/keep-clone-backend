@@ -10,7 +10,7 @@ import {
 import { validateRef } from "./utils";
 import { definitions } from "types/swagger";
 
-export type ILabel = definitions["Label"] & {
+export type ILabel = Omit<definitions["Label"], "id"> & {
   user: Types.ObjectId;
 };
 
