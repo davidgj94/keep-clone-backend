@@ -11,13 +11,13 @@ routerBuilder(
   "/notes",
   "post",
   [
-    body("data.title").isString().optional(),
-    body("data.content").isString().optional(),
-    body("data.labels").isArray().optional(),
-    body("data.labels.*").isString(),
-    body("data.user").isString().optional(),
-    body("data.archived").isBoolean().default(false),
-    body("data.binned").isBoolean().default(false),
+    body("title").isString().optional(),
+    body("content").isString().optional(),
+    body("labels").isArray().optional(),
+    body("labels.*").isString(),
+    body("user").isString().optional(),
+    body("archived").isBoolean().default(false),
+    body("binned").isBoolean().default(false),
   ],
   NotesController.createNote
 );

@@ -21,7 +21,10 @@ export interface ServerResult<T, U> {
   value: U;
 }
 
-type OperationParameters<Operation> = Extract<Operation, "parameters">;
+type OperationParameters<Operation> = Omit<
+  Extract<Operation, "parameters">,
+  "body"
+> & { body: ValueOf<Extract<Extract<Operation, "parameters">, "body">> };
 
 type OperationResponses<Operation> = ValueOf<{
   [statusCode in keyof Extract<Operation, "responses">]: ServerResult<

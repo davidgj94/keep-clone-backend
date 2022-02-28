@@ -30,7 +30,7 @@ const getNotesController: Controller<operations["getNotes"]> = async ({
 };
 
 const createNoteController: Controller<operations["createNote"]> = async ({
-  body: { data: noteFields },
+  body: noteFields,
   user,
 }) => {
   if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED);
@@ -52,7 +52,7 @@ const createNoteController: Controller<operations["createNote"]> = async ({
 };
 
 const modifyNoteController: Controller<operations["modifyNote"]> = async ({
-  body: { data: noteFields },
+  body: noteFields,
   path: { noteId },
   user,
 }) => {

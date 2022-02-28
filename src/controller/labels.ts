@@ -16,7 +16,7 @@ export const findLabelsController: Controller<
 
 export const createLabelController: Controller<
   operations["createLabel"]
-> = async ({ body: { data: labelFields }, user }) => {
+> = async ({ body: labelFields, user }) => {
   if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED);
   const result = await LabelService.upsertLabel({
     ...omit(labelFields, "id"),
@@ -38,7 +38,7 @@ export const createLabelController: Controller<
 
 export const modifyNoteController: Controller<
   operations["modifyLabel"]
-> = async ({ body: { data: labelFields }, path: { labelId }, user }) => {
+> = async ({ body: labelFields, path: { labelId }, user }) => {
   if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED);
   const result = await LabelService.upsertLabel({
     ...labelFields,
