@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
+    "strict": true,
     "strictNullChecks": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
