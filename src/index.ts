@@ -7,6 +7,7 @@ import config from "config";
 import router from "./routes";
 import { errorHandler, notFoundMiddleware } from "middleware/error";
 import { initDatabase } from "./database";
+import "auth/passport";
 
 // Init express
 const app = express();
