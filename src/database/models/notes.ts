@@ -10,7 +10,7 @@ import {
 import { validateRef } from "./utils";
 import { definitions } from "types/swagger";
 
-export type INote = Omit<definitions["Note"], "_id" | "labels" | "user"> & {
+export type INote = Omit<definitions["Note"], "labels"> & {
   labels: Types.ObjectId[];
   user: Types.ObjectId;
 };
