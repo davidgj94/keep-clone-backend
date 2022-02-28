@@ -167,8 +167,6 @@ definitions:
         type: "array"
         items:
           type: "string"
-      user:
-        type: "string"
       archived:
         type: "boolean"
         default: false
@@ -181,8 +179,6 @@ definitions:
       id:
         type: "string"
       name:
-        type: "string"
-      user:
         type: "string"
   GetLabelsResponse:
     type: "object"

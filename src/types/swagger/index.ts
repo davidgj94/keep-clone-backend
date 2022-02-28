@@ -26,14 +26,12 @@ export interface definitions {
     title?: string;
     content?: string;
     labels?: string[];
-    user?: string;
     archived?: boolean;
     binned?: boolean;
   };
   Label: {
     id?: string;
     name?: string;
-    user?: string;
   };
   GetLabelsResponse: {
     data?: definitions["Label"][];

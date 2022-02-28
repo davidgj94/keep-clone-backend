@@ -24,8 +24,7 @@ type GetNotesServiceOut = {
 const notesMapper: Mapper<NoteDocument, definitions["Note"]> = (note) => {
   const noteJSON = note.toJSON();
   return {
-    ...omit(noteJSON, ["_id", "__v"]),
-    user: noteJSON.user.toString(),
+    ...omit(noteJSON, ["_id", "__v", "user"]),
     labels: noteJSON.labels.map((labelObjectId) => labelObjectId.toString()),
   };
 };
@@ -64,6 +63,5 @@ const getNotesService = async ({
 
 export class NotesService {
   static getNotes = getNotesService;
-  // @ts-expect-error mongoose types
   static upsertNote = upsertService(Note, notesMapper);
 }

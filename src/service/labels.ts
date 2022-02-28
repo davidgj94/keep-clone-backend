@@ -8,8 +8,7 @@ import { upsertService } from "./common";
 const labelsMapper: Mapper<LabelDocument, definitions["Label"]> = (labelDB) => {
   const labelJSON = labelDB.toJSON();
   return {
-    ...omit(labelJSON, ["_id", "__v"]),
-    user: labelJSON.user.toString(),
+    ...omit(labelJSON, ["_id", "__v", "user"]),
   };
 };
 
@@ -22,6 +21,5 @@ const listLabelsService = async (
 
 export class LabelService {
   static listLabels = listLabelsService;
-  // @ts-expect-error mongoose types
   static upsertLabel = upsertService(Label, labelsMapper);
 }
