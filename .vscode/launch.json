@@ -13,6 +13,9 @@
       "name": "Debug Jest",
       "type": "node",
       "request": "launch",
+      "env": {
+        "NODE_ENV": "test"
+      },
       "runtimeArgs": [
         "--max_old_space_size=12240",
         "--inspect-brk",

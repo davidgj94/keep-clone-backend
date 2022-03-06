@@ -12,13 +12,13 @@ const noteFieldsValidationChain = [
   body("content").isString().optional(),
   body("labels").isArray().optional(),
   body("labels.*").isString(),
-  body("archived").isBoolean().default(false),
-  body("binned").isBoolean().default(false),
+  body("archived").isBoolean().optional().default(false),
+  body("binned").isBoolean().optional().default(false),
 ];
 
 const getNotesValidationChain = [
   query("cursor").isString().optional(),
-  query("limit").isNumeric(),
+  query("limit").isNumeric().optional(),
   query("labelId").isString().optional(),
 ];
 

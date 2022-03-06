@@ -9,12 +9,11 @@ export type ExtractOperation<
   U extends keyof paths[T]
 > = Extract<Extract<paths, T>, U>;
 
-const transformRouteParams = (routeUrl: string) => {
+const transformRouteParams = (routeUrl: string) =>
   routeUrl
-    .split("")
+    .split("/")
     .map((val) => val.replace(/{(.*)}/, (substring, match) => `:${match}`))
     .join("/");
-};
 
 export function routerBuilder<
   Endpoint extends keyof paths,
