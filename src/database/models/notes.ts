@@ -63,15 +63,15 @@ type FindNotesQuery =
       _id?: { $gt: string };
     }
   | {
-      label: string;
+      labels: string;
       _id?: { $gt: string };
     };
 
 NotesSchema.statics.findNotes = async function (
   this,
-  { labelId: label, userId: user, cursor, limit = 10 }: FindNotesParams
+  { labelId: labels, userId: user, cursor, limit = 10 }: FindNotesParams
 ): Promise<FindNotesOut> {
-  let query: FindNotesQuery = label ? { label } : { user };
+  let query: FindNotesQuery = labels ? { labels } : { user };
   if (cursor) query = { ...query, _id: { $gt: cursor } };
   const notes = await this.find(query).limit(limit + 1);
   const hasMore = notes.length == limit + 1;
