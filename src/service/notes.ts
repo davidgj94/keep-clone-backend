@@ -37,7 +37,7 @@ const getNotesService = async ({
 }: GetNotesServiceParams): Promise<
   ServiceResult<GetNotesServiceOut, "LABEL_NOT_FOUND">
 > => {
-  if (!labelId) {
+  if (labelId) {
     const userLabels = await Label.findUserLabels(userId);
     if (!some(userLabels, (userLabel) => userLabel._id.toString() === labelId))
       return err({

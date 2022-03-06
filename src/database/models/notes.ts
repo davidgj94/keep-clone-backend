@@ -73,11 +73,10 @@ NotesSchema.statics.findNotes = async function (
 ): Promise<FindNotesOut> {
   let query: FindNotesQuery = label ? { label } : { user };
   if (cursor) query = { ...query, _id: { $gt: cursor } };
-  const count = await this.find(query).count();
   const notes = await this.find(query).limit(limit + 1);
   const hasMore = notes.length == limit + 1;
-  const newCursor = hasMore ? notes[limit - 1]._id.toString() : undefined;
-  return { data: notes.slice(0, limit - 1), hasMore, cursor: newCursor };
+  const newCursor = hasMore ? notes[limit - 1].id : undefined;
+  return { data: notes.slice(0, limit), hasMore, cursor: newCursor };
 };
 
 const Note = model<INote, NoteModel>("Note", NotesSchema);
