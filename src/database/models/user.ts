@@ -1,5 +1,6 @@
 import { model, Schema, Model, HydratedDocument } from "mongoose";
 import { hashSync, compareSync } from "bcryptjs";
+import uniqueValidator from "mongoose-unique-validator";
 
 interface IUser {
   email: string;
@@ -18,6 +19,8 @@ const UserSchema = new Schema<IUser, UserModel>({
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
 });
+
+UserSchema.plugin(uniqueValidator);
 
 UserSchema.methods.validatePassword = function (
   this: UserDocument,

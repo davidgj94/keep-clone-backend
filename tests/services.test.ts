@@ -4,8 +4,6 @@ import { lorem } from "faker";
 import { NotesService } from "service/notes";
 import { LabelService } from "service/labels";
 
-import { Note } from "database/models";
-
 import { labelFactory, noteFactory, userFactory } from "./factories";
 
 const recursiveGetNotes = async (
@@ -87,8 +85,51 @@ describe("Get Notes service", () => {
   });
 });
 
-describe("Upsert Note service", () => {});
+describe("Upsert Note service", () => {
+  let userId: string;
+  beforeAll(async () => {
+    userId = (await userFactory()).id;
+  });
+  it("returns EMPTY_FIELDS", async () => {
+    const result = await NotesService.upsertNote({ user: userId });
+    expect(result.isErr()).toBe(true);
+    expect(result.isErr() && result.error.errType).toBe("EMPTY_FIELDS");
+  });
+  it("returns NOT_FOUND_ERROR", async () => {
+    const nonExistingNoteId = new mongoose.Types.ObjectId().toString();
+    const result = await NotesService.upsertNote({
+      user: userId,
+      id: nonExistingNoteId,
+    });
+    expect(result.isErr()).toBe(true);
+    expect(result.isErr() && result.error.errType).toBe("NOT_FOUND");
+  });
+  it("returns VALIDATION_ERROR", async () => {
+    const nonExistingLabelId = new mongoose.Types.ObjectId().toString();
+    const result = await NotesService.upsertNote({
+      labels: [nonExistingLabelId],
+      user: userId,
+    });
+    expect(result.isErr()).toBe(true);
+    expect(result.isErr() && result.error.errType).toBe("VALIDATION_ERROR");
+  });
+});
 
-describe("Get Labels service", () => {});
-
-describe("Upsert Label service", () => {});
+describe("Upsert Label service", () => {
+  let userId: string;
+  beforeAll(async () => {
+    userId = (await userFactory()).id;
+  });
+  it("returns VALIDATION_ERROR", async () => {
+    await labelFactory({
+      name: "asdf",
+      user: new mongoose.Types.ObjectId(userId),
+    });
+    const result = await LabelService.upsertLabel({
+      user: userId,
+      name: "asdf",
+    });
+    expect(result.isErr()).toBe(true);
+    expect(result.isErr() && result.error.errType).toBe("VALIDATION_ERROR");
+  });
+});

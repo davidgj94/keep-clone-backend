@@ -1,5 +1,5 @@
 import { Model, HydratedDocument, Error } from "mongoose";
-import { isEmpty } from "lodash";
+import { isEmpty, omit } from "lodash";
 
 import { Mapper, ServiceResult } from "./utils";
 import { err, ok } from "core/result";
@@ -14,7 +14,7 @@ export const upsertService =
   ): Promise<
     ServiceResult<DtoType, "EMPTY_FIELDS" | "VALIDATION_ERROR" | "NOT_FOUND">
   > => {
-    if (isEmpty(fields))
+    if (isEmpty(omit(fields, "user")))
       return err({ errType: "EMPTY_FIELDS", error: new Error("empty fields") });
     try {
       let doc: HydratedDocument<DbType> | null;

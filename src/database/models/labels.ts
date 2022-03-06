@@ -7,6 +7,7 @@ import {
   SchemaTypes,
   HydratedDocument,
 } from "mongoose";
+import uniqueValidator from "mongoose-unique-validator";
 import { validateRef } from "./utils";
 import { definitions } from "types/swagger";
 
@@ -23,7 +24,7 @@ interface LabelModel extends Model<ILabel, {}, LabelInstanceMethods> {
 interface LabelInstanceMethods {}
 
 const LabelSchema = new Schema<ILabel, LabelModel>({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -31,6 +32,8 @@ const LabelSchema = new Schema<ILabel, LabelModel>({
     index: true,
   },
 });
+
+LabelSchema.plugin(uniqueValidator);
 
 LabelSchema.statics.findUserLabels = async function (
   this,
