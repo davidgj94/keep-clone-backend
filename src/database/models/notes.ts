@@ -79,6 +79,10 @@ NotesSchema.statics.findNotes = async function (
   return { data: notes.slice(0, limit), hasMore, cursor: newCursor };
 };
 
+NotesSchema.set("toJSON", {
+  virtuals: true,
+});
+
 const Note = model<INote, NoteModel>("Note", NotesSchema);
 
 export default Note;

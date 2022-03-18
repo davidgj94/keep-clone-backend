@@ -24,7 +24,7 @@ interface LabelModel extends Model<ILabel, {}, LabelInstanceMethods> {
 interface LabelInstanceMethods {}
 
 const LabelSchema = new Schema<ILabel, LabelModel>({
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -41,6 +41,10 @@ LabelSchema.statics.findUserLabels = async function (
 ): Promise<LabelDocument[]> {
   return await this.find({ user: userId });
 };
+
+LabelSchema.set("toJSON", {
+  virtuals: true,
+});
 
 const Label = model<ILabel, LabelModel>("Label", LabelSchema);
 

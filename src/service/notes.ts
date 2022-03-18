@@ -16,12 +16,14 @@ type GetNotesServiceParams = {
 };
 
 type GetNotesServiceOut = {
-  notes: definitions["Note"][];
+  data: definitions["Note"][];
   cursor?: string;
   hasMore: boolean;
 };
 
-const notesMapper: Mapper<NoteDocument, definitions["Note"]> = (note) => {
+export const notesMapper: Mapper<NoteDocument, definitions["Note"]> = (
+  note
+) => {
   const noteJSON = note.toJSON();
   return {
     ...omit(noteJSON, ["_id", "__v", "user"]),
@@ -58,7 +60,7 @@ const getNotesService = async ({
     limit,
   });
 
-  return ok({ hasMore, cursor: newCursor, notes: data.map(notesMapper) });
+  return ok({ hasMore, cursor: newCursor, data: data.map(notesMapper) });
 };
 
 export class NotesService {

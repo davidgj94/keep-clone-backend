@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import { lorem } from "faker";
 
-import { NotesService } from "service/notes";
+import { NotesService, notesMapper } from "service/notes";
 import { LabelService } from "service/labels";
+import { definitions } from "types/swagger";
 
 import { labelFactory, noteFactory, userFactory } from "./factories";
+import { User, Label, Note } from "database/models";
 
 const recursiveGetNotes = async (
   getNotesArgs: any,
@@ -19,8 +21,8 @@ const recursiveGetNotes = async (
   });
   if (result.isErr()) throw result.error.error;
 
-  const { hasMore, notes, cursor: newCursor } = result.value;
-  allNotes.push(...notes);
+  const { hasMore, data, cursor: newCursor } = result.value;
+  allNotes.push(...data);
   if (hasMore) {
     const remainingNotes = await recursiveGetNotes(
       getNotesArgs,
@@ -33,34 +35,53 @@ const recursiveGetNotes = async (
   return allNotes;
 };
 
+describe("Notes Mapper", () => {
+  it("returns DTO note", async () => {
+    const user = await userFactory({});
+    const labels = await Promise.all(
+      new Array(10).fill(0).map(() => labelFactory({ user: user.id }))
+    );
+
+    const DTONote: definitions["Note"] = {
+      title: lorem.sentence(5),
+      content: lorem.sentences(5),
+      archived: true,
+      binned: true,
+      labels: labels.map(({ id }) => id),
+    };
+
+    const DBNote = await noteFactory({ ...(DTONote as any) });
+    DTONote["id"] = DBNote.id;
+
+    expect(notesMapper(DBNote)).toStrictEqual(DTONote);
+  });
+});
+
 describe("Get Notes service", () => {
   let userId: string;
   let labelId: string;
-  let notesTitles: string[];
-  let labelledNotesTitles: string[];
+  const allNotesIds: string[] = [];
+  const labelledNotesIds: string[] = [];
 
   beforeAll(async () => {
     const user = await userFactory({});
     const label = await labelFactory({ user: user._id });
 
     // Create user labelled notes
-    const titlesLabelledNotes = new Array(10)
-      .fill(0)
-      .map(() => lorem.sentence());
-    for (const title of titlesLabelledNotes) {
-      await noteFactory({ labels: [label._id], user: user._id, title });
+    for (const _ of new Array(10).fill(0)) {
+      const note = await noteFactory({
+        labels: [label._id],
+        user: user._id,
+      });
+      allNotesIds.push(note.id as string);
+      labelledNotesIds.push(note.id as string);
     }
 
     // Create user unlabelled notes
-    const titlesUnlabelledNotes = new Array(10)
-      .fill(0)
-      .map(() => lorem.sentence());
-    for (const title of titlesUnlabelledNotes) {
-      await noteFactory({ user: user._id, title });
+    for (const _ of new Array(10).fill(0)) {
+      allNotesIds.push((await noteFactory({ user: user._id })).id as string);
     }
 
-    notesTitles = [...titlesLabelledNotes, ...titlesUnlabelledNotes];
-    labelledNotesTitles = [...titlesLabelledNotes];
     userId = user.id;
     labelId = label.id;
   });
@@ -74,14 +95,12 @@ describe("Get Notes service", () => {
 
   it("returns only user notes", async () => {
     const userNotes = await recursiveGetNotes({ userId });
-    expect(userNotes.map(({ title }) => title)).toStrictEqual(notesTitles);
+    expect(userNotes.map(({ id }) => id)).toStrictEqual(allNotesIds);
   });
 
   it("returns only labelled notes", async () => {
     const labelledNotes = await recursiveGetNotes({ userId, labelId });
-    expect(labelledNotes.map(({ title }) => title)).toStrictEqual(
-      labelledNotesTitles
-    );
+    expect(labelledNotes.map(({ id }) => id)).toStrictEqual(labelledNotesIds);
   });
 });
 
@@ -109,25 +128,6 @@ describe("Upsert Note service", () => {
     const result = await NotesService.upsertNote({
       labels: [nonExistingLabelId],
       user: userId,
-    });
-    expect(result.isErr()).toBe(true);
-    expect(result.isErr() && result.error.errType).toBe("VALIDATION_ERROR");
-  });
-});
-
-describe("Upsert Label service", () => {
-  let userId: string;
-  beforeAll(async () => {
-    userId = (await userFactory()).id;
-  });
-  it("returns VALIDATION_ERROR", async () => {
-    await labelFactory({
-      name: "asdf",
-      user: new mongoose.Types.ObjectId(userId),
-    });
-    const result = await LabelService.upsertLabel({
-      user: userId,
-      name: "asdf",
     });
     expect(result.isErr()).toBe(true);
     expect(result.isErr() && result.error.errType).toBe("VALIDATION_ERROR");
