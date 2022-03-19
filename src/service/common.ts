@@ -19,7 +19,7 @@ export const upsertService =
     try {
       let doc: HydratedDocument<DbType> | null;
       if (fields.id) {
-        doc = await model.findByIdAndUpdate(fields.id, fields);
+        doc = await model.findByIdAndUpdate(fields.id, fields, { new: true });
         if (!doc)
           return err({
             errType: "NOT_FOUND",
