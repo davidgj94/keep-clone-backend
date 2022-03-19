@@ -6,15 +6,13 @@ import { NotesService } from "service/notes";
 import { omit } from "lodash";
 
 const getNotesController: Controller<operations["getNotes"]> = async ({
-  query: { cursor, labelId, limit },
+  query: queryFields,
   user,
 }) => {
   if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED);
   const result = await NotesService.getNotes({
     userId: user._id,
-    labelId,
-    cursor,
-    limit,
+    ...queryFields,
   });
   if (result.isErr()) {
     const { errType, error } = result.error;

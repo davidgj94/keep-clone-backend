@@ -13,6 +13,7 @@ type GetNotesServiceParams = {
   labelId?: string;
   cursor?: string;
   limit?: number;
+  archived?: boolean;
 };
 
 type GetNotesServiceOut = {
@@ -31,14 +32,10 @@ export const notesMapper: Mapper<NoteDocument, definitions["Note"]> = (
   };
 };
 
-const getNotesService = async ({
-  userId,
-  labelId,
-  cursor,
-  limit,
-}: GetNotesServiceParams): Promise<
-  ServiceResult<GetNotesServiceOut, "LABEL_NOT_FOUND">
-> => {
+const getNotesService = async (
+  getNotesParams: GetNotesServiceParams
+): Promise<ServiceResult<GetNotesServiceOut, "LABEL_NOT_FOUND">> => {
+  const { labelId, userId } = getNotesParams;
   if (labelId) {
     const userLabels = await Label.findUserLabels(userId);
     if (!some(userLabels, (userLabel) => userLabel._id.toString() === labelId))
@@ -53,12 +50,7 @@ const getNotesService = async ({
     data,
     hasMore,
     cursor: newCursor,
-  } = await Note.findNotes({
-    labelId,
-    userId,
-    cursor,
-    limit,
-  });
+  } = await Note.findNotes(getNotesParams);
 
   return ok({ hasMore, cursor: newCursor, data: data.map(notesMapper) });
 };
