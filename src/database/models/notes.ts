@@ -13,6 +13,7 @@ import { definitions } from "types/swagger";
 export type INote = Omit<definitions["Note"], "labels" | "id"> & {
   labels: Types.ObjectId[];
   user: Types.ObjectId;
+  empty: boolean;
 };
 
 export type NoteDocument = HydratedDocument<INote, NoteInstanceMethods>;
@@ -42,6 +43,12 @@ const NotesSchema = new Schema<INote, NoteModel>({
   },
   archived: { type: Boolean, required: false, default: false },
   binned: { type: Boolean, required: false, default: false },
+  empty: { type: Boolean, required: true, default: false },
+});
+
+NotesSchema.pre<NoteDocument>("save", function (this, next) {
+  this.empty = !this.title && !this.content;
+  next();
 });
 
 type FindNotesParams = {
@@ -81,7 +88,9 @@ NotesSchema.statics.findNotes = async function (
 ): Promise<FindNotesOut> {
   let query: FindNotesQuery = labels ? { labels } : { user, archived };
   if (cursor) query = { ...query, _id: { $gt: cursor } };
-  const notes = await this.find(query).limit(limit + 1);
+  const notes = await this.find({ ...query, empty: { $ne: true } }).limit(
+    limit + 1
+  );
   const hasMore = notes.length == limit + 1;
   const newCursor = hasMore ? notes[limit - 1].id : undefined;
   return { data: notes.slice(0, limit), hasMore, cursor: newCursor };

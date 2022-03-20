@@ -11,11 +11,7 @@ export const upsertService =
   ) =>
   async (
     fields: Partial<DtoType> & { id?: string } & { user: string }
-  ): Promise<
-    ServiceResult<DtoType, "EMPTY_FIELDS" | "VALIDATION_ERROR" | "NOT_FOUND">
-  > => {
-    if (isEmpty(omit(fields, "user")))
-      return err({ errType: "EMPTY_FIELDS", error: new Error("empty fields") });
+  ): Promise<ServiceResult<DtoType, "VALIDATION_ERROR" | "NOT_FOUND">> => {
     try {
       let doc: HydratedDocument<DbType> | null;
       if (fields.id) {

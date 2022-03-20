@@ -25,7 +25,6 @@ export const createLabelController: Controller<
   if (result.isErr()) {
     const { errType, error } = result.error;
     switch (errType) {
-      case "EMPTY_FIELDS":
       case "VALIDATION_ERROR":
         throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
       default:
@@ -48,7 +47,6 @@ export const modifyLabelController: Controller<
   if (result.isErr()) {
     const { errType, error } = result.error;
     switch (errType) {
-      case "EMPTY_FIELDS":
       case "VALIDATION_ERROR":
         throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
       case "NOT_FOUND":

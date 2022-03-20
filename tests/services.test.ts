@@ -109,11 +109,6 @@ describe("Upsert Note service", () => {
   beforeAll(async () => {
     userId = (await userFactory()).id;
   });
-  it("returns EMPTY_FIELDS", async () => {
-    const result = await NotesService.upsertNote({ user: userId });
-    expect(result.isErr()).toBe(true);
-    expect(result.isErr() && result.error.errType).toBe("EMPTY_FIELDS");
-  });
   it("returns NOT_FOUND_ERROR", async () => {
     const nonExistingNoteId = new mongoose.Types.ObjectId().toString();
     const result = await NotesService.upsertNote({
