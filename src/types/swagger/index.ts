@@ -28,6 +28,10 @@ export interface definitions {
     labels?: string[];
     archived?: boolean;
     binned?: boolean;
+    /** Format: date-time */
+    updatedAt?: string;
+    /** Format: date-time */
+    createdAt?: string;
   };
   Label: {
     id?: string;

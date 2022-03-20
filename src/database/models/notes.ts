@@ -14,6 +14,7 @@ export type INote = Omit<definitions["Note"], "labels" | "id"> & {
   labels: Types.ObjectId[];
   user: Types.ObjectId;
   empty: boolean;
+  updatedAt: Date;
 };
 
 export type NoteDocument = HydratedDocument<INote, NoteInstanceMethods>;
@@ -24,27 +25,30 @@ interface NoteModel extends Model<INote, {}, NoteInstanceMethods> {
 
 interface NoteInstanceMethods {}
 
-const NotesSchema = new Schema<INote, NoteModel>({
-  content: String,
-  title: { type: String, required: true },
-  labels: [
-    {
+const NotesSchema = new Schema<INote, NoteModel>(
+  {
+    content: String,
+    title: { type: String, required: true },
+    labels: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Label",
+        validate: validateRef("Label"),
+        index: true,
+      },
+    ],
+    user: {
       type: Schema.Types.ObjectId,
-      ref: "Label",
-      validate: validateRef("Label"),
+      ref: "User",
+      validate: validateRef("User"),
       index: true,
     },
-  ],
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    validate: validateRef("User"),
-    index: true,
+    archived: { type: Boolean, required: false, default: false },
+    binned: { type: Boolean, required: false, default: false },
+    empty: { type: Boolean, required: true, default: false },
   },
-  archived: { type: Boolean, required: false, default: false },
-  binned: { type: Boolean, required: false, default: false },
-  empty: { type: Boolean, required: true, default: false },
-});
+  { timestamps: true }
+);
 
 NotesSchema.pre<NoteDocument>("save", function (this, next) {
   this.empty = !this.title && !this.content;

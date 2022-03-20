@@ -173,6 +173,12 @@ definitions:
       binned:
         type: "boolean"
         default: false
+      updatedAt:
+        type: "string"
+        format: "date-time"
+      createdAt:
+        type: "string"
+        format: "date-time"
   Label:
     type: "object"
     properties:
