@@ -50,8 +50,11 @@ const NotesSchema = new Schema<INote, NoteModel>(
   { timestamps: true }
 );
 
+const setEmpty = (doc: NoteDocument) =>
+  (doc.empty = !doc.title && !doc.content);
+
 NotesSchema.pre<NoteDocument>("save", function (this, next) {
-  this.empty = !this.title && !this.content;
+  setEmpty(this);
   next();
 });
 

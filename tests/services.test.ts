@@ -7,6 +7,7 @@ import { definitions } from "types/swagger";
 
 import { labelFactory, noteFactory, userFactory } from "./factories";
 import { User, Label, Note } from "database/models";
+import { UserDocument } from "database/models/user";
 
 const recursiveGetNotes = async (
   getNotesArgs: any,
@@ -42,7 +43,7 @@ describe("Notes Mapper", () => {
       new Array(10).fill(0).map(() => labelFactory({ user: user.id }))
     );
 
-    const DTONote: definitions["Note"] = {
+    const DTONote: Partial<definitions["Note"]> = {
       title: lorem.sentence(5),
       content: lorem.sentences(5),
       archived: true,
@@ -51,7 +52,10 @@ describe("Notes Mapper", () => {
     };
 
     const DBNote = await noteFactory({ ...(DTONote as any) });
-    DTONote["id"] = DBNote.id;
+    DTONote.id = DBNote.id;
+    DTONote.updatedAt = DBNote.updatedAt;
+    DTONote.createdAt = DBNote.createdAt;
+    DTONote.empty = false;
 
     expect(notesMapper(DBNote)).toStrictEqual(DTONote);
   });
@@ -106,8 +110,10 @@ describe("Get Notes service", () => {
 
 describe("Upsert Note service", () => {
   let userId: string;
+  let user: any;
   beforeAll(async () => {
-    userId = (await userFactory()).id;
+    user = await userFactory();
+    userId = user.id;
   });
   it("returns NOT_FOUND_ERROR", async () => {
     const nonExistingNoteId = new mongoose.Types.ObjectId().toString();
@@ -126,5 +132,26 @@ describe("Upsert Note service", () => {
     });
     expect(result.isErr()).toBe(true);
     expect(result.isErr() && result.error.errType).toBe("VALIDATION_ERROR");
+  });
+  it("inserts empty note", async () => {
+    const result = await NotesService.upsertNote({
+      user: userId,
+    });
+    expect(result.isOk()).toBe(true);
+    expect(result.isOk() && result.value.empty).toBe(true);
+  });
+  it("updates empty note", async () => {
+    const note = await noteFactory({
+      content: "",
+      title: "",
+      user: user._id,
+    });
+    expect(note.empty).toBe(true);
+    const result = await NotesService.upsertNote({
+      title: lorem.sentence(5),
+      user: userId,
+    });
+    expect(result.isOk()).toBe(true);
+    expect(result.isOk() && result.value.empty).toBe(false);
   });
 });
