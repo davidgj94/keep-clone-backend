@@ -32,7 +32,7 @@ export interface definitions {
     updatedAt?: string;
     /** Format: date-time */
     createdAt?: string;
-    empty: boolean;
+    empty?: boolean;
   };
   Label: {
     id?: string;

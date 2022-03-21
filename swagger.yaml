@@ -156,8 +156,6 @@ paths:
 definitions:
   Note:
     type: "object"
-    required:
-      - empty
     properties:
       id:
         type: "string"
