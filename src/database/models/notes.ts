@@ -28,7 +28,7 @@ interface NoteInstanceMethods {}
 const NotesSchema = new Schema<INote, NoteModel>(
   {
     content: String,
-    title: { type: String, required: true },
+    title: String,
     labels: [
       {
         type: Schema.Types.ObjectId,

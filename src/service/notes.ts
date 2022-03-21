@@ -27,7 +27,7 @@ export const notesMapper: Mapper<NoteDocument, definitions["Note"]> = (
 ) => {
   const noteJSON = note.toJSON();
   return {
-    ...omit(noteJSON, ["_id", "__v", "user", "empty"]),
+    ...omit(noteJSON, ["_id", "__v", "user"]),
     labels: noteJSON.labels.map((labelObjectId) => labelObjectId.toString()),
   };
 };

@@ -156,6 +156,8 @@ paths:
 definitions:
   Note:
     type: "object"
+    required:
+      - empty
     properties:
       id:
         type: "string"
@@ -179,6 +181,9 @@ definitions:
       createdAt:
         type: "string"
         format: "date-time"
+      empty:
+        type: boolean
+
   Label:
     type: "object"
     properties:
