@@ -15,6 +15,7 @@ export type INote = Omit<definitions["Note"], "labels" | "id"> & {
   user: Types.ObjectId;
   empty: boolean;
   updatedAt: Date;
+  createdAt: Date;
 };
 
 export type NoteDocument = HydratedDocument<INote, NoteInstanceMethods>;
@@ -75,12 +76,12 @@ type FindNotesOut = {
 type FindNotesQuery =
   | {
       user: string;
-      _id?: { $gt: string };
+      updatedAt?: { $lt: Date };
       archived: boolean;
     }
   | {
       labels: string;
-      _id?: { $gt: string };
+      updatedAt?: { $lt: Date };
     };
 
 NotesSchema.statics.findNotes = async function (
@@ -94,12 +95,14 @@ NotesSchema.statics.findNotes = async function (
   }: FindNotesParams
 ): Promise<FindNotesOut> {
   let query: FindNotesQuery = labels ? { labels } : { user, archived };
-  if (cursor) query = { ...query, _id: { $gt: cursor } };
+  if (cursor) query = { ...query, updatedAt: { $lt: new Date(cursor) } };
   const notes = await this.find({ ...query, empty: { $ne: true } })
     .limit(limit + 1)
     .sort({ updatedAt: -1 });
   const hasMore = notes.length == limit + 1;
-  const newCursor = hasMore ? notes[limit - 1].id : undefined;
+  const newCursor = hasMore
+    ? new Date(notes[limit - 1].updatedAt).toISOString()
+    : undefined;
   return { data: notes.slice(0, limit), hasMore, cursor: newCursor };
 };
 

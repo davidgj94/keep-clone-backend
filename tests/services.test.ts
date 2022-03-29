@@ -99,12 +99,16 @@ describe("Get Notes service", () => {
 
   it("returns only user notes", async () => {
     const userNotes = await recursiveGetNotes({ userId });
-    expect(userNotes.map(({ id }) => id)).toStrictEqual(allNotesIds);
+    expect(userNotes.map(({ id }) => id)).toStrictEqual(
+      [...allNotesIds].reverse() // newest notes first
+    );
   });
 
   it("returns only labelled notes", async () => {
     const labelledNotes = await recursiveGetNotes({ userId, labelId });
-    expect(labelledNotes.map(({ id }) => id)).toStrictEqual(labelledNotesIds);
+    expect(labelledNotes.map(({ id }) => id)).toStrictEqual(
+      [...labelledNotesIds].reverse() // newest notes first
+    );
   });
 });
 

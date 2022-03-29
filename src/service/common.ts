@@ -21,9 +21,9 @@ export const upsertService =
             errType: "NOT_FOUND",
             error: new Error(`document with id "${fields.id}" not found`),
           });
-        doc.set(omit(fields, "id"));
+        doc.set(omit(fields, ["id", "updatedAt", "createdAt"]));
       } else {
-        doc = new model(fields);
+        doc = new model(omit(fields, ["updatedAt", "createdAt"]));
       }
       await doc.save();
       return ok(mapper(doc));

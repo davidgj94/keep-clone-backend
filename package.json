@@ -4,7 +4,8 @@
   "main": "src/index.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --watch src -e ts,ejs --exec node -r ts-node/register -r tsconfig-paths/register --inspect ./src/index.ts",
+    "debug": "nodemon --watch src -e ts,ejs --exec node -r ts-node/register -r tsconfig-paths/register --inspect ./src/index.ts",
+    "dev": "nodemon --watch src -e ts,ejs --exec node -r ts-node/register -r tsconfig-paths/register ./src/index.ts",
     "build-ts": "tsc -p tsconfig-build.json",
     "codegen:swagger": "openapi-typescript swagger.yaml --output src/types/swagger/index.ts",
     "seed": "node -r ts-node/register -r tsconfig-paths/register ./tests/seed.ts"

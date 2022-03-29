@@ -18,7 +18,7 @@ const noteFieldsValidationChain = [
 
 const getNotesValidationChain = [
   query("cursor").isString().optional(),
-  query("limit").isNumeric().optional(),
+  query("limit").isNumeric().optional().toInt(),
   query("labelId").isString().optional(),
 ];
 
