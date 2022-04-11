@@ -152,6 +152,26 @@ paths:
           description: Bad request
         401:
           description: Unauthorized
+    delete:
+      tags:
+        - "label"
+      operationId: "deleteLabel"
+      parameters:
+        - in: "path"
+          name: "labelId"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Label"
+        404:
+          description: Not found
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
 
 definitions:
   Note:

@@ -26,7 +26,7 @@ export const createLabelController: Controller<
     const { errType, error } = result.error;
     switch (errType) {
       case "VALIDATION_ERROR":
-        throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
+        throw new ServerError(StatusCodes.BAD_REQUEST, error?.message);
       default:
         throw error;
     }
@@ -48,9 +48,9 @@ export const modifyLabelController: Controller<
     const { errType, error } = result.error;
     switch (errType) {
       case "VALIDATION_ERROR":
-        throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
+        throw new ServerError(StatusCodes.BAD_REQUEST, error?.message || "");
       case "NOT_FOUND":
-        throw new ServerError(StatusCodes.NOT_FOUND, error.message);
+        throw new ServerError(StatusCodes.NOT_FOUND, error?.message || "");
       default:
         throw error;
     }
@@ -59,8 +59,26 @@ export const modifyLabelController: Controller<
   return { statusCode: StatusCodes.CREATED, value: result.value };
 };
 
+export const deleteLabelController: Controller<
+  operations["deleteLabel"]
+> = async ({ path: { labelId }, user }) => {
+  if (!user) throw new ServerError(StatusCodes.UNAUTHORIZED);
+  const result = await LabelService.deleteLabel(labelId);
+  if (result.isErr()) {
+    const { errType, error } = result.error;
+    switch (errType) {
+      case "LABEL_NOT_FOUND":
+        throw new ServerError(StatusCodes.NOT_FOUND, "Label not found");
+      default:
+        throw error;
+    }
+  }
+  return { statusCode: StatusCodes.OK, value: result.value };
+};
+
 export class LabelController {
   static findLabels = findLabelsController;
   static createLabel = createLabelController;
   static modifyLabel = modifyLabelController;
+  static deleteLabel = deleteLabelController;
 }

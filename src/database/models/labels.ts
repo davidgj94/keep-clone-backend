@@ -24,7 +24,7 @@ interface LabelModel extends Model<ILabel, {}, LabelInstanceMethods> {
 interface LabelInstanceMethods {}
 
 const LabelSchema = new Schema<ILabel, LabelModel>({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -33,7 +33,16 @@ const LabelSchema = new Schema<ILabel, LabelModel>({
   },
 });
 
-LabelSchema.plugin(uniqueValidator);
+LabelSchema.path("name").validate(async function (
+  this: LabelDocument,
+  name: string
+) {
+  if (!this.isNew && !this.isModified("name")) return true;
+  const count = await Label.find({ name }).count();
+  if (count) return false;
+  return true;
+},
+"Label's name must be unique");
 
 LabelSchema.statics.findUserLabels = async function (
   this,

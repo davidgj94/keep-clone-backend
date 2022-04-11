@@ -17,6 +17,7 @@ export interface paths {
   };
   "/labels/{labelId}": {
     put: operations["modifyLabel"];
+    delete: operations["deleteLabel"];
   };
 }
 
@@ -156,6 +157,25 @@ export interface operations {
     responses: {
       /** OK */
       201: {
+        schema: definitions["Label"];
+      };
+      /** Bad request */
+      400: unknown;
+      /** Unauthorized */
+      401: unknown;
+      /** Not found */
+      404: unknown;
+    };
+  };
+  deleteLabel: {
+    parameters: {
+      path: {
+        labelId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
         schema: definitions["Label"];
       };
       /** Bad request */

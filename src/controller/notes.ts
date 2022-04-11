@@ -18,7 +18,7 @@ const getNotesController: Controller<operations["getNotes"]> = async ({
     const { errType, error } = result.error;
     switch (errType) {
       case "LABEL_NOT_FOUND":
-        throw new ServerError(StatusCodes.NOT_FOUND, error.message);
+        throw new ServerError(StatusCodes.NOT_FOUND, error?.message);
       default:
         throw error;
     }
@@ -40,7 +40,7 @@ const createNoteController: Controller<operations["createNote"]> = async ({
     const { errType, error } = result.error;
     switch (errType) {
       case "VALIDATION_ERROR":
-        throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
+        throw new ServerError(StatusCodes.BAD_REQUEST, error?.message);
       default:
         throw error;
     }
@@ -63,9 +63,9 @@ const modifyNoteController: Controller<operations["modifyNote"]> = async ({
     const { errType, error } = result.error;
     switch (errType) {
       case "VALIDATION_ERROR":
-        throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
+        throw new ServerError(StatusCodes.BAD_REQUEST, error?.message);
       case "NOT_FOUND":
-        throw new ServerError(StatusCodes.NOT_FOUND, error.message);
+        throw new ServerError(StatusCodes.NOT_FOUND, error?.message);
       default:
         throw error;
     }

@@ -42,4 +42,12 @@ routerBuilder(
   LabelController.modifyLabel
 );
 
+routerBuilder(
+  router,
+  "/labels/{labelId}",
+  "delete",
+  [passport.authenticate("jwt", { session: false })],
+  LabelController.deleteLabel
+);
+
 export default router;
