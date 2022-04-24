@@ -12,7 +12,7 @@ import { validateRef } from "./utils";
 import { definitions } from "types/swagger";
 
 export type ILabel = Omit<definitions["Label"], "id"> & {
-  user: Types.ObjectId;
+  user: string;
 };
 
 export type LabelDocument = HydratedDocument<ILabel, LabelInstanceMethods>;
@@ -26,9 +26,7 @@ interface LabelInstanceMethods {}
 const LabelSchema = new Schema<ILabel, LabelModel>({
   name: { type: String, required: true, unique: true },
   user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    validate: validateRef("User"),
+    type: String,
     index: true,
   },
 });

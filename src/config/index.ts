@@ -12,4 +12,7 @@ export default {
     ? parseInt(process.env.JWT_EXPIRES_DAYS)
     : 30,
   TEST_ENV: process.env.NODE_ENV === "test",
+  FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+  FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+  FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
 };

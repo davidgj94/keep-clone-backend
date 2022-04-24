@@ -16,29 +16,17 @@ routerBuilder(
   router,
   "/labels",
   "post",
-  [
-    passport.authenticate("jwt", { session: false }),
-    ...labelFieldsValidationChain,
-  ],
+  labelFieldsValidationChain,
   LabelController.createLabel
 );
 
-routerBuilder(
-  router,
-  "/labels",
-  "get",
-  [passport.authenticate("jwt", { session: false })],
-  LabelController.findLabels
-);
+routerBuilder(router, "/labels", "get", LabelController.findLabels);
 
 routerBuilder(
   router,
   "/labels/{labelId}",
   "put",
-  [
-    passport.authenticate("jwt", { session: false }),
-    ...labelFieldsValidationChain,
-  ],
+  labelFieldsValidationChain,
   LabelController.modifyLabel
 );
 
@@ -46,7 +34,6 @@ routerBuilder(
   router,
   "/labels/{labelId}",
   "delete",
-  [passport.authenticate("jwt", { session: false })],
   LabelController.deleteLabel
 );
 

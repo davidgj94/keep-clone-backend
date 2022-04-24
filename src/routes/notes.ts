@@ -26,10 +26,7 @@ routerBuilder(
   router,
   "/notes",
   "post",
-  [
-    passport.authenticate("jwt", { session: false }),
-    ...noteFieldsValidationChain,
-  ],
+  noteFieldsValidationChain,
   NotesController.createNote
 );
 
@@ -37,10 +34,7 @@ routerBuilder(
   router,
   "/notes",
   "get",
-  [
-    passport.authenticate("jwt", { session: false }),
-    ...getNotesValidationChain,
-  ],
+  getNotesValidationChain,
   NotesController.getNotes
 );
 
@@ -48,10 +42,7 @@ routerBuilder(
   router,
   "/notes/{noteId}",
   "put",
-  [
-    passport.authenticate("jwt", { session: false }),
-    ...noteFieldsValidationChain,
-  ],
+  noteFieldsValidationChain,
   NotesController.modifyNote
 );
 

@@ -12,7 +12,7 @@ import { definitions } from "types/swagger";
 
 export type INote = Omit<definitions["Note"], "labels" | "id"> & {
   labels: Types.ObjectId[];
-  user: Types.ObjectId;
+  user: string;
   empty: boolean;
   updatedAt: Date;
   createdAt: Date;
@@ -39,9 +39,7 @@ const NotesSchema = new Schema<INote, NoteModel>(
       },
     ],
     user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      validate: validateRef("User"),
+      type: String,
       index: true,
     },
     archived: { type: Boolean, required: false, default: false },
