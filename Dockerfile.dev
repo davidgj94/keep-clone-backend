@@ -1,0 +1,10 @@
+FROM node:14.17
+WORKDIR /usr
+COPY package*.json ./
+COPY yarn.lock ./
+COPY tsconfig.json ./
+COPY src ./src
+RUN ls -a
+RUN yarn install
+EXPOSE 8000
+CMD ["yarn","dev"]

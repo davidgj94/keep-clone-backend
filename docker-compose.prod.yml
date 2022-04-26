@@ -1,0 +1,12 @@
+# docker-compose.prod.yml
+version: "3.7"
+services:
+  app:
+    container_name: app
+    restart: always
+    build: .
+    env_file: .env
+    environment:
+      - SERVER_PORT=8000
+    ports:
+      - 8000:8000
