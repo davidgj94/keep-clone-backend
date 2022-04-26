@@ -1,0 +1,16 @@
+name: build
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run docker-compose stack
+        run: cp .env.example .env && docker-compose -f docker-compose.prod.yml build
