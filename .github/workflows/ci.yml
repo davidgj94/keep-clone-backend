@@ -49,6 +49,6 @@ jobs:
         run: yarn install
 
       - name: jest
-        run: echo $CHUNKS | jq '.[${{ matrix.chunk }}] | .[] | @text' | xargs npx jest
+        run: echo $CHUNKS | jq '.[${{ matrix.chunk }}] | .[] | @text' | xargs yarn test
         env:
           CHUNKS: ${{ needs.setup.outputs['test-chunks'] }}

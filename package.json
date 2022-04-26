@@ -9,7 +9,8 @@
     "start": "node -r ./prod-paths.js dist/index.js",
     "build-ts": "tsc -p tsconfig-build.json",
     "codegen:swagger": "openapi-typescript swagger.yaml --output src/types/swagger/index.ts",
-    "seed": "node -r ts-node/register -r tsconfig-paths/register ./tests/seed.ts"
+    "seed": "node -r ts-node/register -r tsconfig-paths/register ./tests/seed.ts",
+    "test": "NODE_ENV=test node --max_old_space_size=12240 ./node_modules/jest/bin/jest.js --config ./jest.config.js --maxWorkers=2 --passWithNoTests --silent --verbose --colors --json"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
